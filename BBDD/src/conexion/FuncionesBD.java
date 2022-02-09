@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import modelo.Editorial;
+import modelo.Libro;
 
 
 /**
@@ -17,12 +21,12 @@ public class FuncionesBD {
 	
 	private static ConexionBD conexion = new ConexionBD();
 	
-	public static void mostrarEditoriales() {
+	public static ArrayList<Editorial> mostrarEditoriales() {
 		// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		Statement consulta = null;
 		ResultSet resultado = null;
-		
+		ArrayList<Editorial> lista = new ArrayList<Editorial>();
 		
 		try {
 			consulta = con.createStatement();
@@ -34,8 +38,8 @@ public class FuncionesBD {
 				String nombre = resultado.getString("nombre");
 				int año = resultado.getInt("año");
 				
-				System.out.printf("codEDitorial: %d\tNombre: %s\tAño: %d\n",
-						codEditorial, nombre, año);
+				Editorial ed = new Editorial(codEditorial, nombre,año);
+				lista.add(ed);
 			}
 			
 		} catch (SQLException e) {
@@ -51,10 +55,12 @@ public class FuncionesBD {
 				
 			}
 		}
+		return lista;
 	}
 	
-	public static void mostrarLibros() {
+	public static ArrayList<Libro> mostrarLibros() {
 		// Obtenemos una conexion a la base de datos.
+		ArrayList<Libro> lista = new ArrayList<Libro>();
 		Connection con = conexion.getConexion();
 		Statement consulta = null;
 		ResultSet resultado = null;
@@ -76,9 +82,8 @@ public class FuncionesBD {
 				int cantidad = resultado.getInt("cantidad");
 				float precioCD = resultado.getFloat("precioCD");
 				
-				System.out.printf("isbn: %s\tTítulo: %s\tCódigo: %d\tAño: %d\n"
-						+ "Num Páginas: %d\tPrecio: %.2f\tCAntidad: %d\tPRecioCD:%.2f\n",
-						isbn,titulo,codigo, año, num, precio, cantidad, precioCD);
+				Libro l =new Libro(isbn,titulo,codigo, año, num, precio, cantidad, precioCD);
+				lista.add(l);
 			}
 			
 		} catch (SQLException e) {
@@ -94,6 +99,7 @@ public class FuncionesBD {
 				
 			}
 		}
+		return lista;
 	}
 	
 }
