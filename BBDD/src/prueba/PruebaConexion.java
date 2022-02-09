@@ -23,6 +23,8 @@ public class PruebaConexion {
 		
 		System.out.println("Programa que muestra la tabla Editoriales por pantalla");
 		FuncionesBD.mostrarEditoriales();
+		System.out.println("Mostando los libros:\n");
+		FuncionesBD.mostrarLibros();
 
 	}
 
