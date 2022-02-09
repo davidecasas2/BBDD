@@ -8,6 +8,7 @@ package prueba;
 import java.sql.Connection;
 
 import conexion.ConexionBD;
+import conexion.FuncionesBD;
 
 /**
  * @author David
@@ -19,11 +20,9 @@ public class PruebaConexion {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ConexionBD conexionBD = new ConexionBD();
 		
-		Connection conn = conexionBD.getConexion();
-		// ...
-		conexionBD.desconectar();
+		System.out.println("Programa que muestra la tabla Editoriales por pantalla");
+		FuncionesBD.mostrarEditoriales();
 
 	}
 
