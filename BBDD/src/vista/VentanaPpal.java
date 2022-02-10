@@ -6,33 +6,28 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import conexion.FuncionesBD;
+import controlador.Controlador;
+import modelo.Editorial;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
 
 public class VentanaPpal extends JFrame {
 
 	private JPanel contentPane;
+	private Controlador controlador;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPpal frame = new VentanaPpal();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 
 	/**
 	 * Create the frame.
 	 */
 	public VentanaPpal() {
+		
 		setTitle("Base de datos de Biblioteca");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -42,10 +37,26 @@ public class VentanaPpal extends JFrame {
 		contentPane.setLayout(new MigLayout("", "[][grow][][grow][]", "[][]"));
 		
 		JButton btnNewButton = new JButton("MostarEditoriales");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlador.mostrarEditoriales();
+			}
+		});
 		contentPane.add(btnNewButton, "cell 1 1");
 		
 		JButton btnNewButton_1 = new JButton("Mostrar Libros");
 		contentPane.add(btnNewButton_1, "cell 3 1");
 	}
+
+
+
+	/**
+	 * @param controlador el controlador a establecer
+	 */
+	public void setControlador(Controlador controlador) {
+		this.controlador = controlador;
+	}
+	
+	
 
 }

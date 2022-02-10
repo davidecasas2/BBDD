@@ -16,13 +16,16 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import controlador.Controlador;
 import modelo.Editorial;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogoEditoriales extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
-
+	private Controlador controlador;
 
 
 	/**
@@ -64,6 +67,11 @@ public class DialogoEditoriales extends JDialog {
 		}
 		{
 			JButton btnNewButton = new JButton("Cerrar");
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+				}
+			});
 			contentPanel.add(btnNewButton, "cell 0 2,alignx right");
 		}
 	}
@@ -78,5 +86,14 @@ public class DialogoEditoriales extends JDialog {
 			modelo.addRow(fila);
 		}
 	}
+
+	/**
+	 * @param controlador el controlador a establecer
+	 */
+	public void setControlador(Controlador controlador) {
+		this.controlador = controlador;
+	}
+	
+	
 
 }
