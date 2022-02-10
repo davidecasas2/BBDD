@@ -45,6 +45,11 @@ public class VentanaPpal extends JFrame {
 		contentPane.add(btnNewButton, "cell 1 1");
 		
 		JButton btnNewButton_1 = new JButton("Mostrar Libros");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlador.mostrarLibros();
+			}
+		});
 		contentPane.add(btnNewButton_1, "cell 3 1");
 	}
 
