@@ -4,11 +4,13 @@
 package conexion;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import modelo.Autor;
 import modelo.Editorial;
 import modelo.Libro;
 
@@ -102,4 +104,71 @@ public class FuncionesBD {
 		return lista;
 	}
 	
+	
+	public static ArrayList<Autor> mostrarAutores() {
+		// Obtenemos una conexion a la base de datos.
+		ArrayList<Autor> lista = new ArrayList<Autor>();
+		Connection con = conexion.getConexion();
+		Statement consulta = null;
+		ResultSet resultado = null;
+		
+		
+		try {
+			consulta = con.createStatement();
+			resultado = consulta.executeQuery("select * from autores");
+			
+			// Bucle para recorrer todas las filas que devuelve la consulta
+			while(resultado.next()) {
+				int codigo = resultado.getInt("idAutor");
+				String nombre= resultado.getString("nombre");
+				String apellidos = resultado.getString("apellidos");
+				
+				Autor a =  new Autor(codigo, nombre, apellidos);
+				lista.add(a);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error al realizar la consulta: "+e.getMessage());
+		} finally {
+			try {
+				resultado.close();
+				consulta.close();
+				conexion.desconectar();
+			} catch (SQLException e) {
+				System.out.println("Error al liberar recursos: "+e.getMessage());
+			} catch (Exception e) {
+				
+			}
+		}
+		return lista;
+	}
+	
+	public static int insertarAutor(Autor a) {
+		// Obtenemos una conexion a la base de datos.
+		Connection con = conexion.getConexion();
+		PreparedStatement consulta = null;
+		int resultado=0;
+		
+		try {
+			consulta = con.prepareStatement("INSERT INTO autores (nombre,apellidos)"
+					+ " VALUES (?,?) ");
+			
+			consulta.setString(1, a.getNombre());
+			consulta.setString(2, a.getApellidos());
+			resultado=consulta.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println("Error al realizar la consulta: "+e.getMessage());
+		} finally {
+			try {
+				consulta.close();
+				conexion.desconectar();
+			} catch (SQLException e) {
+				System.out.println("Error al liberar recursos: "+e.getMessage());
+			} catch (Exception e) {
+				
+			}
+		}
+		return resultado;
+	}
 }
