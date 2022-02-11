@@ -37,9 +37,11 @@ public class Libro {
 	 * @param precio float con el precio del libro
 	 * @param cantidad int con el el numero del¡ libros en stock
 	 * @param precioCD precio del CD incluido o 0 en caso de no tener CD
+	 * @throws PaginaNegativasException 
+	 * @throws PrcioMenorque10Exception 
 	 */
 	public Libro(String isbn, String titulo, int codEditorial, int año, int num_pags, float precio, int cantidad,
-			float precioCD) {
+			float precioCD)  {
 		super();
 		this.isbn = isbn;
 		this.titulo = titulo;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package conexion;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,21 +10,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import modelo.Autor;
+import conexion.ConexionBD;
 import modelo.Editorial;
-import modelo.Libro;
-
 
 /**
  * @author David
- *
+ * Clase que implementa un CRUD de la base batos
+ * (Create, Read, update y delete)
  */
-public class FuncionesBD {
+public class EditorialDAO {
+
+	private ConexionBD conexion;
 	
-	private static ConexionBD conexion = new ConexionBD();
-	
-	public static ArrayList<Editorial> mostrarEditoriales() {
-		// Obtenemos una conexion a la base de datos.
+    public EditorialDAO() {
+        this.conexion = new ConexionBD();
+    }
+
+
+    public ArrayList<Editorial> obtenerEditoriales() {
+    	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		Statement consulta = null;
 		ResultSet resultado = null;
@@ -58,109 +62,35 @@ public class FuncionesBD {
 			}
 		}
 		return lista;
-	}
-	
-	public static ArrayList<Libro> mostrarLibros() {
-		// Obtenemos una conexion a la base de datos.
-		ArrayList<Libro> lista = new ArrayList<Libro>();
-		Connection con = conexion.getConexion();
-		Statement consulta = null;
-		ResultSet resultado = null;
-		
-		
-		try {
-			consulta = con.createStatement();
-			resultado = consulta.executeQuery("select * from libros\r\n"
-					+ "order by num_pags DESC");
-			
-			// Bucle para recorrer todas las filas que devuelve la consulta
-			while(resultado.next()) {
-				String isbn = resultado.getString("isbn");
-				String titulo = resultado.getString("título");
-				int codigo = resultado.getInt("codeditorial");
-				int año = resultado.getInt("año");
-				int num = resultado.getInt("num_pags");
-				float precio = resultado.getFloat("precio");
-				int cantidad = resultado.getInt("cantidad");
-				float precioCD = resultado.getFloat("precioCD");
-				
-				Libro l =new Libro(isbn,titulo,codigo, año, num, precio, cantidad, precioCD);
-				lista.add(l);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("Error al realizar la consulta: "+e.getMessage());
-		} finally {
-			try {
-				resultado.close();
-				consulta.close();
-				conexion.desconectar();
-			} catch (SQLException e) {
-				System.out.println("Error al liberar recursos: "+e.getMessage());
-			} catch (Exception e) {
-				
-			}
-		}
-		return lista;
-	}
-	
-	
-	public static ArrayList<Autor> mostrarAutores() {
-		// Obtenemos una conexion a la base de datos.
-		ArrayList<Autor> lista = new ArrayList<Autor>();
-		Connection con = conexion.getConexion();
-		Statement consulta = null;
-		ResultSet resultado = null;
-		
-		
-		try {
-			consulta = con.createStatement();
-			resultado = consulta.executeQuery("select * from autores");
-			
-			// Bucle para recorrer todas las filas que devuelve la consulta
-			while(resultado.next()) {
-				int codigo = resultado.getInt("idAutor");
-				String nombre= resultado.getString("nombre");
-				String apellidos = resultado.getString("apellidos");
-				
-				Autor a =  new Autor(codigo, nombre, apellidos);
-				lista.add(a);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println("Error al realizar la consulta: "+e.getMessage());
-		} finally {
-			try {
-				resultado.close();
-				consulta.close();
-				conexion.desconectar();
-			} catch (SQLException e) {
-				System.out.println("Error al liberar recursos: "+e.getMessage());
-			} catch (Exception e) {
-				
-			}
-		}
-		return lista;
-	}
-	
-	public static int insertarAutor(Autor a) {
-		// Obtenemos una conexion a la base de datos.
+    }
+
+
+    public Editorial obtenerCliente(int codEditorial) {
+    	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
-		int resultado=0;
+		ResultSet resultado = null;
+		Editorial ed=null;
 		
 		try {
-			consulta = con.prepareStatement("INSERT INTO autores (nombre,apellidos)"
-					+ " VALUES (?,?) ");
+			consulta = con.prepareStatement("select * from editoriales"
+					+ "where codEditorial = ?");
+			consulta.setInt(1, codEditorial);
+			consulta.executeQuery();
 			
-			consulta.setString(1, a.getNombre());
-			consulta.setString(2, a.getApellidos());
-			resultado=consulta.executeUpdate();
-
+			// Bucle para recorrer todas las filas que devuelve la consulta
+			if (resultado.next()) {
+				String nombre = resultado.getString("nombre");
+				int año = resultado.getInt("año");
+				
+				ed = new Editorial(codEditorial, nombre,año);
+			}
+			
 		} catch (SQLException e) {
 			System.out.println("Error al realizar la consulta: "+e.getMessage());
 		} finally {
 			try {
+				resultado.close();
 				consulta.close();
 				conexion.desconectar();
 			} catch (SQLException e) {
@@ -169,11 +99,12 @@ public class FuncionesBD {
 				
 			}
 		}
-		return resultado;
-	}
+		return ed;
+    }
 
-	public static int insertarEditorial(Editorial ed) {
-		// Obtenemos una conexion a la base de datos.
+
+    public int insertarEditorial(Editorial editorial) {
+    	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
 		int resultado=0;
@@ -182,8 +113,8 @@ public class FuncionesBD {
 			consulta = con.prepareStatement("INSERT INTO editoriales (nombre,año)"
 					+ " VALUES (?,?) ");
 			
-			consulta.setString(1, ed.getNombre());
-			consulta.setInt(2, ed.getAño());
+			consulta.setString(1, editorial.getNombre());
+			consulta.setInt(2, editorial.getAño());
 			resultado=consulta.executeUpdate();
 
 		} catch (SQLException e) {
@@ -199,23 +130,26 @@ public class FuncionesBD {
 			}
 		}
 		return resultado;
-	}
-	
-	public static int borraLibro(String isbn) {
-		// Obtenemos una conexion a la base de datos.
+    }
+
+    public int actualizarEditorial(Editorial editorial) {
+    	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
 		int resultado=0;
 		
 		try {
-			consulta = con.prepareStatement("DELETE FROM libros\r\n"
-					+ "WHERE isbn= ?");
+			consulta = con.prepareStatement("UPDATE `biblioteca`.`editoriales`\r\n"
+					+ "SET `nombre` = ?, `año` = ?\r\n"
+					+ "WHERE `codEditorial` = ?;");
 			
-			consulta.setString(1, isbn);
+			consulta.setString(1, editorial.getNombre());
+			consulta.setInt(2, editorial.getAño());
+			consulta.setInt(3, editorial.getCodEditorial());
 			resultado=consulta.executeUpdate();
 
 		} catch (SQLException e) {
-			System.out.println("Error al realizar el borrado: "+e.getMessage());
+			System.out.println("Error al realizar la actualizacion: "+e.getMessage());
 		} finally {
 			try {
 				consulta.close();
@@ -227,5 +161,35 @@ public class FuncionesBD {
 			}
 		}
 		return resultado;
-	}
+    }
+
+
+    public int eliminarEditorial(Editorial editorial) {
+    	// Obtenemos una conexion a la base de datos.
+		Connection con = conexion.getConexion();
+		PreparedStatement consulta = null;
+		int resultado=0;
+		
+		try {
+			consulta = con.prepareStatement("DELETE FROM `biblioteca`.`editoriales`\r\n"
+					+ "WHERE codEditorial = ?");
+			
+			consulta.setInt(1, editorial.getCodEditorial());
+			resultado=consulta.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println("Error al realizar la actualizacion: "+e.getMessage());
+		} finally {
+			try {
+				consulta.close();
+				conexion.desconectar();
+			} catch (SQLException e) {
+				System.out.println("Error al liberar recursos: "+e.getMessage());
+			} catch (Exception e) {
+				
+			}
+		}
+		return resultado;
+    }
+
 }

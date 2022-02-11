@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.util.ArrayList;
 
@@ -19,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
 import controlador.Controlador;
 import modelo.Editorial;
 import modelo.Libro;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaLibros extends JFrame {
 
@@ -84,8 +88,30 @@ public class VentanaLibros extends JFrame {
 		table.getColumnModel().getColumn(4).setPreferredWidth(94);
 		scrollPane.setViewportView(table);
 		
+		JButton btnNewButton_1 = new JButton("Borrar Libro");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				llamarBorrarLibro();
+			}
+		});
+		contentPane.add(btnNewButton_1, "flowx,cell 0 2,alignx right");
+		
 		JButton btnNewButton = new JButton("Cerrar");
 		contentPane.add(btnNewButton, "cell 0 2,alignx right");
+	}
+
+	protected void llamarBorrarLibro() {
+		int fila=table.getSelectedRow();
+		DefaultTableModel modelo = (DefaultTableModel) table.getModel();
+		String isbn = (String) modelo.getValueAt(fila, 0);
+		
+		int res=controlador.borrarLibro(isbn);
+		if (res!=0) {
+			modelo.removeRow(fila);
+		} else {
+			JOptionPane.showMessageDialog(null, "Error al borrar el libro "+isbn);
+		}
+		
 	}
 
 	/**
