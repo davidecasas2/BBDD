@@ -14,6 +14,8 @@ public class Autor {
 	private int idAutor;
 	private String nombre;
 	private String apellidos;
+	
+	
 	public Autor(int idAutor, String nombre, String apellidos) {
 		super();
 		this.idAutor = idAutor;
