@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import conexion.FuncionesBD;
+import dao.AutorDAO;
+import dao.AutorLibroDAO;
 import dao.EditorialDAO;
+import dao.LibroDAO;
 import modelo.Autor;
 import modelo.Editorial;
 import modelo.Libro;
@@ -16,6 +19,7 @@ import vista.AñadirAutor;
 import vista.AñadirEditorial;
 import vista.DialogoEditoriales;
 import vista.VentanaAutores;
+import vista.VentanaAñadirLibro;
 import vista.VentanaLibros;
 import vista.VentanaPpal;
 
@@ -32,9 +36,13 @@ public class Controlador {
 	private VentanaAutores ventanaAutores;
 	private AñadirAutor añadirAutor;
 	private AñadirEditorial añadirEditorial;
+	private VentanaAñadirLibro ventanaAñadirLibro;
 	
 	// Objetos DAO o CRUD de la base de datos
 	private EditorialDAO editorialDAO;
+	private AutorDAO autorDAO;
+	private LibroDAO libroDAO;
+	private AutorLibroDAO autorLibroDAO;
 	
 	public Controlador() {
 		// Creamos las ventanas de la aplicación
@@ -44,6 +52,7 @@ public class Controlador {
 		ventanaAutores = new VentanaAutores();
 		añadirAutor = new AñadirAutor();
 		añadirEditorial = new AñadirEditorial();
+		ventanaAñadirLibro = new VentanaAñadirLibro();
 		
 		// Dando acceso al controlador desde las vistas
 		ventanaPpal.setControlador(this);
@@ -52,9 +61,13 @@ public class Controlador {
 		ventanaAutores.setControlador(this);
 		añadirAutor.setControlador(this);
 		añadirEditorial.setControlador(this);
+		ventanaAñadirLibro.setControlador(this);
 		
 		// Creamos los objetos DAO
 		editorialDAO = new EditorialDAO();
+		autorDAO = new AutorDAO();
+		libroDAO = new LibroDAO();
+		autorLibroDAO = new AutorLibroDAO();
 	}
 	
 	public void inciarPrograma() {
@@ -109,5 +122,19 @@ public class Controlador {
 
 	public int borrarLibro(String isbn) {
 		return FuncionesBD.borraLibro(isbn);
+	}
+
+	public void mostrarInsertarLibro() {
+		// Consultar las editoriales
+		ArrayList<Editorial> listaEditoriales = editorialDAO.obtenerEditoriales();
+		// Consultar los autores deisponibles
+		ArrayList<Autor> listaAutores = autorDAO.obtenerAutores();
+		// pasarle la lista de editoriales 
+		ventanaAñadirLibro.setEditoriales(listaEditoriales);
+		
+		// pasar la lista de autores
+		ventanaAñadirLibro.setListaAutores(listaAutores);
+		// mostrar la ventana
+		ventanaAñadirLibro.setVisible(true);
 	}
 }

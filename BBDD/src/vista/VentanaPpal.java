@@ -66,6 +66,14 @@ public class VentanaPpal extends JFrame {
 			}
 		});
 		contentPane.add(btnNewButton_4, "cell 1 2,growx");
+		
+		JButton btnNewButton_5 = new JButton("Insertar Libro");
+		btnNewButton_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlador.mostrarInsertarLibro();
+			}
+		});
+		contentPane.add(btnNewButton_5, "cell 3 2,growx");
 		contentPane.add(btnNewButton_2, "cell 2 4");
 		
 		JButton btnNewButton_3 = new JButton("InsertarAutor");
