@@ -65,7 +65,7 @@ public class EditorialDAO {
     }
 
 
-    public Editorial obtenerCliente(int codEditorial) {
+    public Editorial obtenerEditorial(int codEditorial) {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
@@ -76,7 +76,7 @@ public class EditorialDAO {
 			consulta = con.prepareStatement("select * from editoriales"
 					+ "where codEditorial = ?");
 			consulta.setInt(1, codEditorial);
-			consulta.executeQuery();
+			resultado = consulta.executeQuery();
 			
 			// Bucle para recorrer todas las filas que devuelve la consulta
 			if (resultado.next()) {

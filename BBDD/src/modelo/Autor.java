@@ -11,12 +11,12 @@ import java.util.Objects;
  */
 public class Autor {
 
-	private int idAutores;
+	private int idAutor;
 	private String nombre;
 	private String apellidos;
-	public Autor(int idAutores, String nombre, String apellidos) {
+	public Autor(int idAutor, String nombre, String apellidos) {
 		super();
-		this.idAutores = idAutores;
+		this.idAutor = idAutor;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 	}
@@ -26,14 +26,14 @@ public class Autor {
 	/**
 	 * @return el idAutores
 	 */
-	public int getIdAutores() {
-		return idAutores;
+	public int getIdAutor() {
+		return idAutor;
 	}
 	/**
 	 * @param idAutores el idAutores a establecer
 	 */
-	public void setIdAutores(int idAutores) {
-		this.idAutores = idAutores;
+	public void setIdAutor(int idAutor) {
+		this.idAutor = idAutor;
 	}
 	/**
 	 * @return el nombre
@@ -61,7 +61,7 @@ public class Autor {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(idAutores);
+		return Objects.hash(idAutor);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -72,11 +72,11 @@ public class Autor {
 		if (getClass() != obj.getClass())
 			return false;
 		Autor other = (Autor) obj;
-		return idAutores == other.idAutores;
+		return idAutor == other.idAutor;
 	}
 	@Override
 	public String toString() {
-		return "Autor [idAutores=" + idAutores + ", nombre=" + nombre + ", apellidos=" + apellidos + "]";
+		return "Autor [idAutores=" + idAutor + ", nombre=" + nombre + ", apellidos=" + apellidos + "]";
 	}
 	
 	
