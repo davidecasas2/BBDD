@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import conexion.ConexionBD;
+import modelo.Autor;
 import modelo.Editorial;
 
 /**
@@ -18,38 +19,38 @@ import modelo.Editorial;
  * Clase que implementa un CRUD de la base batos
  * (Create, Read, update y delete)
  */
-public class EditorialDAO {
+public class AutorDAO {
 
 	private ConexionBD conexion;
 	
-    public EditorialDAO() {
+    public AutorDAO() {
         this.conexion = new ConexionBD();
     }
 
 
-    public ArrayList<Editorial> obtenerEditoriales() {
+    public ArrayList<Autor> obtenerAutores() {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		Statement consulta = null;
 		ResultSet resultado = null;
-		ArrayList<Editorial> lista = new ArrayList<Editorial>();
+		ArrayList<Autor> lista = new ArrayList<Autor>();
 		
 		try {
 			consulta = con.createStatement();
-			resultado = consulta.executeQuery("select * from editoriales");
+			resultado = consulta.executeQuery("select * from autores");
 			
 			// Bucle para recorrer todas las filas que devuelve la consulta
 			while(resultado.next()) {
-				int codEditorial = resultado.getInt("codeditorial");
+				int idAutor = resultado.getInt("idAutor");
 				String nombre = resultado.getString("nombre");
-				int año = resultado.getInt("año");
+				String ape = resultado.getString("apellidos");
 				
-				Editorial ed = new Editorial(codEditorial, nombre,año);
-				lista.add(ed);
+				Autor au = new Autor(idAutor, nombre,ape);
+				lista.add(au);
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error al realizar la consulta: "+e.getMessage());
+			System.out.println("Error al realizar la consulta sobre autores: "+e.getMessage());
 		} finally {
 			try {
 				resultado.close();
@@ -65,29 +66,30 @@ public class EditorialDAO {
     }
 
 
-    public Editorial obtenerEditorial(int codEditorial) {
+    public Autor obtenerCliente(int idAutor) {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
 		ResultSet resultado = null;
-		Editorial ed=null;
+		Autor au=null;
 		
 		try {
-			consulta = con.prepareStatement("select * from editoriales"
-					+ "where codEditorial = ?");
-			consulta.setInt(1, codEditorial);
-			resultado = consulta.executeQuery();
+			consulta = con.prepareStatement("select * from autores"
+					+ " where idAutor = ?");
+			consulta.setInt(1, idAutor);
+			resultado=consulta.executeQuery();
 			
 			// Bucle para recorrer todas las filas que devuelve la consulta
 			if (resultado.next()) {
 				String nombre = resultado.getString("nombre");
-				int año = resultado.getInt("año");
+				String ape = resultado.getString("apellidos");
 				
-				ed = new Editorial(codEditorial, nombre,año);
+				au = new Autor(idAutor, nombre,ape);
 			}
 			
 		} catch (SQLException e) {
-			System.out.println("Error al realizar la consulta: "+e.getMessage());
+			System.out.println("Error al realizar la consulta sobre autores: "
+		         +e.getMessage());
 		} finally {
 			try {
 				resultado.close();
@@ -99,26 +101,27 @@ public class EditorialDAO {
 				
 			}
 		}
-		return ed;
+		return au;
     }
 
 
-    public int insertarEditorial(Editorial editorial) {
+    public int insertarAutor(Autor autor) {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
 		int resultado=0;
 		
 		try {
-			consulta = con.prepareStatement("INSERT INTO editoriales (nombre,año)"
+			consulta = con.prepareStatement("INSERT INTO autores (nombre,apellidos)"
 					+ " VALUES (?,?) ");
 			
-			consulta.setString(1, editorial.getNombre());
-			consulta.setInt(2, editorial.getAño());
+			consulta.setString(1, autor.getNombre());
+			consulta.setString(2, autor.getApellidos());
 			resultado=consulta.executeUpdate();
 
 		} catch (SQLException e) {
-			System.out.println("Error al realizar la consulta: "+e.getMessage());
+			System.out.println("Error al realizar la inserción del autor: "
+		        +e.getMessage());
 		} finally {
 			try {
 				consulta.close();
@@ -132,24 +135,25 @@ public class EditorialDAO {
 		return resultado;
     }
 
-    public int actualizarEditorial(Editorial editorial) {
+    public int actualizarAutor(Autor autor) {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
 		int resultado=0;
 		
 		try {
-			consulta = con.prepareStatement("UPDATE `biblioteca`.`editoriales`\r\n"
-					+ "SET `nombre` = ?, `año` = ?\r\n"
-					+ "WHERE `codEditorial` = ?;");
+			consulta = con.prepareStatement("UPDATE autor \r\n"
+					+ "SET `nombre` = ?, `apellidos` = ?\r\n"
+					+ "WHERE `idAutor` = ?;");
 			
-			consulta.setString(1, editorial.getNombre());
-			consulta.setInt(2, editorial.getAño());
-			consulta.setInt(3, editorial.getCodEditorial());
+			consulta.setString(1, autor.getNombre());
+			consulta.setString(2, autor.getApellidos());
+			consulta.setInt(3, autor.getIdAutor());
 			resultado=consulta.executeUpdate();
 
 		} catch (SQLException e) {
-			System.out.println("Error al realizar la actualizacion: "+e.getMessage());
+			System.out.println("Error al realizar la actualizacion de autores: "
+					+e.getMessage());
 		} finally {
 			try {
 				consulta.close();
@@ -164,21 +168,21 @@ public class EditorialDAO {
     }
 
 
-    public int eliminarEditorial(Editorial editorial) {
+    public int eliminarAutores(Autor autor) {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;
 		int resultado=0;
 		
 		try {
-			consulta = con.prepareStatement("DELETE FROM `biblioteca`.`editoriales`\r\n"
-					+ "WHERE codEditorial = ?");
+			consulta = con.prepareStatement("DELETE FROM `biblioteca`.`autores`\r\n"
+					+ "WHERE idAutor = ?");
 			
-			consulta.setInt(1, editorial.getCodEditorial());
+			consulta.setInt(1, autor.getIdAutor());
 			resultado=consulta.executeUpdate();
 
 		} catch (SQLException e) {
-			System.out.println("Error al realizar la actualizacion: "+e.getMessage());
+			System.out.println("Error al realizar el borrado de Autor: "+e.getMessage());
 		} finally {
 			try {
 				consulta.close();
