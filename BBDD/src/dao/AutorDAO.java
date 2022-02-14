@@ -66,7 +66,7 @@ public class AutorDAO {
     }
 
 
-    public Autor obtenerCliente(int idAutor) {
+    public Autor obtenerAutor(int idAutor) {
     	// Obtenemos una conexion a la base de datos.
 		Connection con = conexion.getConexion();
 		PreparedStatement consulta = null;

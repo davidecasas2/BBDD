@@ -82,7 +82,7 @@ public class VentanaAutores extends JFrame {
 		modelo.setRowCount(0);
 		for (Autor autor : lista) {
 			Object [] fila = {
-					autor.getIdAutores(), autor.getNombre(), autor.getApellidos()
+					autor.getIdAutor(), autor.getNombre(), autor.getApellidos()
 			};
 			modelo.addRow(fila);
 		}
