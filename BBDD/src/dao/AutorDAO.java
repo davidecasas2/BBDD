@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import conexion.ConexionBD;
 import modelo.Autor;
 import modelo.Editorial;
+import modelo.Libro;
 
 /**
  * @author David
@@ -65,6 +66,45 @@ public class AutorDAO {
 		return lista;
     }
 
+    public ArrayList<Autor> obtenerAutores(Libro l) {
+    	// Obtenemos una conexion a la base de datos.
+		Connection con = conexion.getConexion();
+		Statement consulta = null;
+		ResultSet resultado = null;
+		ArrayList<Autor> lista = new ArrayList<Autor>();
+		
+		try {
+			consulta = con.createStatement();
+			resultado = consulta.executeQuery("select a.idAutor, nombre, apellidos\r\n"
+					+ "from autores a inner join autorlibro al\r\n"
+					+ "on a.idAutor = al.idAutor\r\n"
+					+ "where isbn = ?;");
+			
+			// Bucle para recorrer todas las filas que devuelve la consulta
+			while(resultado.next()) {
+				int idAutor = resultado.getInt("idAutor");
+				String nombre = resultado.getString("nombre");
+				String ape = resultado.getString("apellidos");
+				
+				Autor au = new Autor(idAutor, nombre,ape);
+				lista.add(au);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error al realizar la consulta de autores de un libro: "+e.getMessage());
+		} finally {
+			try {
+				resultado.close();
+				consulta.close();
+				conexion.desconectar();
+			} catch (SQLException e) {
+				System.out.println("Error al liberar recursos: "+e.getMessage());
+			} catch (Exception e) {
+				
+			}
+		}
+		return lista;
+    }
 
     public Autor obtenerAutor(int idAutor) {
     	// Obtenemos una conexion a la base de datos.

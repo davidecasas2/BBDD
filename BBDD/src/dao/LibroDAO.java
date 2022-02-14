@@ -71,6 +71,51 @@ public class LibroDAO {
 		return lista;
     }
 
+    
+    public ArrayList<Libro> obtenerAutores(Autor a) {
+    	// Obtenemos una conexion a la base de datos.
+		Connection con = conexion.getConexion();
+		Statement consulta = null;
+		ResultSet resultado = null;
+		ArrayList<Libro> lista = new ArrayList<Libro>();
+		
+		try {
+			consulta = con.createStatement();
+			resultado = consulta.executeQuery("select l.*\r\n"
+					+ "from libros l inner join autorlibro al\r\n"
+					+ "on l.isbn = al.isbn\r\n"
+					+ "where idAutor=?;");
+			
+			// Bucle para recorrer todas las filas que devuelve la consulta
+			while(resultado.next()) {
+				String isbn = resultado.getString("isbn");
+				String titulo = resultado.getString("título");
+				int codEditorial = resultado.getInt("codEditorial");
+				int año = resultado.getInt("año");
+				int num_pags = resultado.getInt("num_pags");
+				float precio = resultado.getFloat("precio");
+				int cantidad = resultado.getInt("cantidad");
+				float precioCD = resultado.getFloat("precioCD");
+				Libro l = new Libro(isbn,titulo, codEditorial,año,num_pags, 
+						precio,cantidad,precioCD);
+				lista.add(l);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Error al realizar la consulta de autores de un libro: "+e.getMessage());
+		} finally {
+			try {
+				resultado.close();
+				consulta.close();
+				conexion.desconectar();
+			} catch (SQLException e) {
+				System.out.println("Error al liberar recursos: "+e.getMessage());
+			} catch (Exception e) {
+				
+			}
+		}
+		return lista;
+    }
 
     public Libro obtenerLibro(String isbn) {
     	// Obtenemos una conexion a la base de datos.
