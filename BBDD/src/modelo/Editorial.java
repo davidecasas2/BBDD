@@ -61,7 +61,7 @@ public class Editorial {
 	}
 	@Override
 	public String toString() {
-		return "Editorial [codEditorial=" + codEditorial + ", nombre=" + nombre + ", año=" + año + "]";
+		return this.codEditorial+" - "+this.nombre;
 	}
 	
 	

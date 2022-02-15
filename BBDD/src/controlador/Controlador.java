@@ -137,4 +137,15 @@ public class Controlador {
 		// mostrar la ventana
 		ventanaAñadirLibro.setVisible(true);
 	}
+
+	public void insertarLibro(Libro l, ArrayList<Autor> listaAutores) {
+		// Insertamos el libro
+		libroDAO.insertarLibro(l);
+		
+		for (Autor autor : listaAutores) {
+			autorLibroDAO.insertarAutorLibro(autor.getIdAutor(), l.getIsbn());
+		}
+		
+		ventanaAñadirLibro.setVisible(false);
+	}
 }

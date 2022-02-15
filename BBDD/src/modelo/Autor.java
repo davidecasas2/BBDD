@@ -78,7 +78,7 @@ public class Autor {
 	}
 	@Override
 	public String toString() {
-		return "Autor [idAutores=" + idAutor + ", nombre=" + nombre + ", apellidos=" + apellidos + "]";
+		return this.apellidos+", "+this.nombre;
 	}
 	
 	
