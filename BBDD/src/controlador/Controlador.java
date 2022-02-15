@@ -107,6 +107,7 @@ public class Controlador {
 	}
 	
 	public void mostrarAñadirEditorial() {
+		añadirEditorial.setEditorial(null);
 		añadirEditorial.setVisible(true);
 	}
 	
@@ -147,5 +148,22 @@ public class Controlador {
 		}
 		
 		ventanaAñadirLibro.setVisible(false);
+	}
+
+	public void mostrarActualizar(int codEditorial) {
+		Editorial e = editorialDAO.obtenerEditorial(codEditorial);
+		añadirEditorial.setEditorial(e);
+		añadirEditorial.setVisible(true);
+	}
+
+	public void actualizarEditorial(Editorial ed) {
+		int res=editorialDAO.actualizarEditorial(ed);
+		if (res==0) {
+			JOptionPane.showMessageDialog(añadirEditorial, "Error no se ha podido actualizar");
+		} else {
+			JOptionPane.showMessageDialog(añadirEditorial, "Editorial actualizado correctamente.");
+			añadirEditorial.setVisible(false);
+		}
+		mostrarEditoriales();
 	}
 }

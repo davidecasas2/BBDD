@@ -26,6 +26,7 @@ public class AñadirEditorial extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtAño;
 	private Controlador controlador;
+	private Editorial editorial;
 
 	/**
 	 * Launch the application.
@@ -115,9 +116,16 @@ public class AñadirEditorial extends JFrame {
 			
 			//Editorial ed = new Editorial(0,nombre,año);
 			Editorial ed = new Editorial();
+			
 			ed.setNombre(nombre);
 			ed.setAño(año);
-			controlador.insertarEditorial(ed);
+			if (this.editorial == null)
+				controlador.insertarEditorial(ed);
+			else {
+				ed.setCodEditorial(this.editorial.getCodEditorial());
+				controlador.actualizarEditorial(ed);
+				
+			}
 		} catch (NumberFormatException e ) {
 			JOptionPane.showMessageDialog(null, "Introduzca un año correcto");
 		}
@@ -130,6 +138,18 @@ public class AñadirEditorial extends JFrame {
 	 */
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
+	}
+
+	public void setEditorial(Editorial e) {
+		editorial = e;
+		if (e!=null) {
+			txtNombre.setText(editorial.getNombre());
+			txtAño.setText(""+editorial.getAño());
+		} else {
+			txtNombre.setText("");
+			txtAño.setText("");
+		}
+		
 	}
 	
 	

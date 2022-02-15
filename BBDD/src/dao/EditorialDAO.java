@@ -73,7 +73,7 @@ public class EditorialDAO {
 		Editorial ed=null;
 		
 		try {
-			consulta = con.prepareStatement("select * from editoriales"
+			consulta = con.prepareStatement("select * from editoriales "
 					+ "where codEditorial = ?");
 			consulta.setInt(1, codEditorial);
 			resultado = consulta.executeQuery();
@@ -147,6 +147,8 @@ public class EditorialDAO {
 			consulta.setInt(2, editorial.getAño());
 			consulta.setInt(3, editorial.getCodEditorial());
 			resultado=consulta.executeUpdate();
+			
+			System.out.println(consulta);
 
 		} catch (SQLException e) {
 			System.out.println("Error al realizar la actualizacion: "+e.getMessage());
